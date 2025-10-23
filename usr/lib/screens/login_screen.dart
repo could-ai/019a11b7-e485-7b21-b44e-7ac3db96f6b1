@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Lógica de autenticação aqui
+      // Simulação de login (sem autenticação real)
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );

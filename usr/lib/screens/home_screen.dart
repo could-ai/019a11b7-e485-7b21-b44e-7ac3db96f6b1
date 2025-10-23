@@ -11,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 1; // Inicia na aba Pacientes para foco no cadastro
   final List<Widget> _screens = [
     const AppointmentsScreen(),
     const PatientsScreen(),

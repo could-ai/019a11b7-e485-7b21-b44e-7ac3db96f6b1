@@ -1,30 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:couldai_user_app/services/firestore_service.dart';
 
-class AppointmentsScreen extends StatelessWidget {
+class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
 
   @override
+  _AppointmentsScreenState createState() => _AppointmentsScreenState();
+}
+
+class _AppointmentsScreenState extends State<AppointmentsScreen> {
+  final DataService _dataService = DataService();
+
+  @override
   Widget build(BuildContext context) {
+    final appointments = _dataService.getAppointments();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agenda'),
       ),
-      body: ListView.builder(
-        itemCount: 10, // Exemplo
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('Consulta ${index + 1}'),
-            subtitle: const Text('Paciente: Nome do Paciente'),
-            trailing: const Icon(Icons.arrow_forward),
-            onTap: () {
-              // Navegar para detalhes da consulta
-            },
-          );
-        },
-      ),
+      body: appointments.isEmpty
+          ? const Center(child: Text('Nenhuma consulta agendada.'))
+          : ListView.builder(
+              itemCount: appointments.length,
+              itemBuilder: (context, index) {
+                final appointment = appointments[index];
+                final patient = _dataService.getPatientById(appointment['patientId']);
+                return ListTile(
+                  title: Text('Consulta com ${patient?['name'] ?? 'Paciente Desconhecido'}'),
+                  subtitle: Text('${appointment['date'].toString().split(' ')[0]} - ${appointment['notes']}'),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Adicionar nova consulta
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const AddAppointmentScreen()),
+          );
+          if (result == true) setState(() {});
         },
         child: const Icon(Icons.add),
       ),
